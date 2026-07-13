@@ -1,6 +1,6 @@
 # Payout Management System
 
-Laravel + Inertia.js + Vue 3 app for managing payouts, employees, and users.
+Laravel + Inertia.js + Vue 3 app for managing payouts, employees, and users
 
 ## Requirements
 

@@ -99,7 +99,7 @@ class UserController extends Controller
 
         $user->syncRoles($request->validated('role'));
 
-        Inertia::flash('toast', ['type' => 'success', 'message' => 'User updated successfully.']);
+        Inertia::flash('toast', ['type' => 'success', 'message' => 'User updated successfully']);
 
         return to_route('users.index');
     }
