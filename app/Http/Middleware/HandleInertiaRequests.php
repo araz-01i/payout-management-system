@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
@@ -38,10 +39,18 @@ class HandleInertiaRequests extends Middleware
         return [
             ...parent::share($request),
             'name' => config('app.name'),
-            'auth' => [
-                'user' => $request->user(),
-            ],
+            'auth' => Inertia::always(fn () => [
+                'user' => $request->user()?->load('roles'),
+            ]),
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
+            'can' => $request->user() ? [
+                'manage_employees' => $request->user()->can('manage employees'),
+                'view_payouts' => $request->user()->can('view payouts'),
+                'create_payouts' => $request->user()->can('create payouts'),
+                'edit_payouts' => $request->user()->can('edit payouts'),
+                'delete_payouts' => $request->user()->can('delete payouts'),
+                'change_status' => $request->user()->can('change payout status'),
+            ] : [],
         ];
     }
 }

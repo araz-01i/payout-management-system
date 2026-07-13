@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { Link } from '@inertiajs/vue3';
-import { BookOpen, FolderGit2, LayoutGrid } from '@lucide/vue';
+import { Link, usePage } from '@inertiajs/vue3';
+import { computed } from 'vue';
+import { Users, UserCheck, DollarSign } from '@lucide/vue';
 import AppLogo from '@/components/AppLogo.vue';
-import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
 import NavUser from '@/components/NavUser.vue';
 import {
@@ -14,29 +14,45 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { dashboard } from '@/routes';
+import { index as usersIndex } from '@/routes/users';
+import { index as employeesIndex } from '@/routes/employees';
+import { index as payoutsIndex } from '@/routes/payouts';
 import type { NavItem } from '@/types';
 
-const mainNavItems: NavItem[] = [
-    {
-        title: 'Dashboard',
-        href: dashboard(),
-        icon: LayoutGrid,
-    },
-];
+const page = usePage();
+const can = computed(() => (page.props as any).can ?? {});
 
-const footerNavItems: NavItem[] = [
-    {
-        title: 'Repository',
-        href: 'https://github.com/laravel/vue-starter-kit',
-        icon: FolderGit2,
-    },
-    {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#vue',
-        icon: BookOpen,
-    },
-];
+const mainNavItems = computed<NavItem[]>(() => {
+    const items: NavItem[] = [];
+
+    items.push({
+        title: 'Users',
+        href: usersIndex.url(),
+        icon: Users,
+    });
+
+    // Add Employees menu item if user has permission
+    if (can.value.manage_employees) {
+        items.push({
+            title: 'Employees',
+            href: employeesIndex.url(),
+            icon: UserCheck,
+        });
+    }
+
+    // Add Payouts menu item if user has permission
+    if (can.value.view_payouts) {
+        items.push({
+            title: 'Payouts',
+            href: payoutsIndex.url(),
+            icon: DollarSign,
+        });
+    }
+
+    return items;
+});
+
+
 </script>
 
 <template>
@@ -45,7 +61,7 @@ const footerNavItems: NavItem[] = [
             <SidebarMenu>
                 <SidebarMenuItem>
                     <SidebarMenuButton size="lg" as-child>
-                        <Link :href="dashboard()">
+                        <Link href="/">
                             <AppLogo />
                         </Link>
                     </SidebarMenuButton>
@@ -58,7 +74,6 @@ const footerNavItems: NavItem[] = [
         </SidebarContent>
 
         <SidebarFooter>
-            <NavFooter :items="footerNavItems" />
             <NavUser />
         </SidebarFooter>
     </Sidebar>
