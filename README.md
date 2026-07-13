@@ -7,7 +7,20 @@ Laravel + Inertia.js + Vue 3 app for managing payouts, employees, and users.
 - PHP 8.3+
 - Composer
 - Node.js + npm
-- Database (MySQL/PostgreSQL/SQLite)
+- MySQL
+
+## Database Setup
+
+Create a MySQL database and update `.env`:
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=payout_management_system
+DB_USERNAME=your_db_name
+DB_PASSWORD=your_password
+```
 
 ## Setup
 
@@ -20,19 +33,25 @@ npm install
 npm run build
 ```
 
+Seed permissions and roles:
+
+```bash
+php artisan db:seed --class=CompletePermissionSeeder
+```
+
 ## Run
 
 ```bash
 composer run dev
 ```
 
-This starts the Laravel dev server. Open `http://payout-management-system.test` in your browser.
 
-## Seed permissions and roles
+## Default Users
 
-```bash
-php artisan db:seed --class=CompletePermissionSeeder
-```
+| Email | Password | Role |
+|-------|----------|------|
+| admin@example.com | password | Admin |
+| staff@example.com | password | Staff |
 
 ## Tests
 
@@ -49,3 +68,5 @@ php artisan test --compact
 | `php artisan test --compact` | Run tests |
 | `vendor/bin/pint` | Format PHP code |
 | `php artisan wayfinder:generate` | Regenerate route types |
+
+
