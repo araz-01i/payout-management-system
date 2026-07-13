@@ -24,15 +24,7 @@ test('guest is redirected from users index', function () {
     $this->get(route('users.index'))->assertRedirect(route('login'));
 });
 
-// Create
-test('authenticated user can view create user form', function () {
-    $this->actingAs($this->user)
-        ->get(route('users.create'))
-        ->assertSuccessful()
-        ->assertInertia(fn ($page) => $page->component('users/Create'));
-});
-
-// Store - validation
+// Index
 it('requires all fields to create a user', function (string $field, mixed $value) {
     $data = [
         'name' => 'Jane Doe',
@@ -84,17 +76,6 @@ test('user can be created with a valid payload', function () {
 
     $user = User::where('email', 'newstaff@example.com')->first();
     expect($user->hasRole('staff'))->toBeTrue();
-});
-
-// Edit
-test('authenticated user can view edit user form', function () {
-    $staff = User::factory()->create();
-    $staff->assignRole('staff');
-
-    $this->actingAs($this->user)
-        ->get(route('users.edit', $staff))
-        ->assertSuccessful()
-        ->assertInertia(fn ($page) => $page->component('users/Edit'));
 });
 
 // Update

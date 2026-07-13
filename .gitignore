@@ -27,7 +27,6 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
-# AI/editor tool configs (local only)
 .cursor/
 .kilo/
 .kiro/
